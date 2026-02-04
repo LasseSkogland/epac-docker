@@ -46,15 +46,14 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: |
-                      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-                      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.full }}
-                      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.major_minor }}
-                      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.major }}
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=branch
                       type=sha
                       type=raw,value=latest,enable={{is_default_branch}}
+                      type=raw,value=${{ steps.get_version.outputs.full }}
+                      type=raw,value=${{ steps.get_version.outputs.major_minor }}
+                      type=raw,value=${{ steps.get_version.outputs.major }}
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
