@@ -24,6 +24,24 @@ Tags include:
 ## Use in GitHub Actions
 
 Reference the image in a job container or run it directly with Docker. Ensure your workflow has permissions to pull from GHCR if the repo is private.
+```yaml
+jobs:
+  epac-job:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/lasseskogland/epac-docker:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize EPAC
+        shell: pwsh  
+        run: /initialize.ps1
+
+      - name: Run EPAC commands
+        run: |
+          Build-DeploymentPlans...
+```
 
 ## Build locally
 

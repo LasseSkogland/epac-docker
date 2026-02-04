@@ -36,3 +36,6 @@ RUN Install-PSResource -Name "EnterprisePolicyAsCode" -Version $env:EPAC_VERSION
 RUN Import-Module Az.Accounts, Az.PolicyInsights, EnterprisePolicyAsCode
 
 WORKDIR /github/workspace
+
+COPY initialize.ps1 /initialize.ps1
+RUN chmod +x /initialize.ps1
