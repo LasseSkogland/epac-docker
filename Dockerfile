@@ -1,4 +1,5 @@
 FROM debian:bookworm-slim
+ARG EPAC_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
@@ -23,6 +24,6 @@ RUN source /etc/os-release \
 RUN pwsh -Command "Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted'; \
     Install-Module -Name 'Az.Accounts' -Scope AllUsers -Force; \
     Install-Module -Name 'Az.PolicyInsights' -Scope AllUsers -Force; \
-    Install-Module -Name 'EnterprisePolicyAsCode' -Scope AllUsers -Force;"
+    Install-Module -Name 'EnterprisePolicyAsCode' -RequiredVersion $env:EPAC_VERSION -Scope AllUsers -Force;"
 
 WORKDIR /github/workspace
