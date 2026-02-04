@@ -19,16 +19,20 @@ RUN source /etc/os-release \
     && apt-get install -y --no-install-recommends powershell \
     && rm -rf /var/lib/apt/lists/*
 
+SHELL ["pwsh", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
 # Install Azure PowerShell modules and EnterprisePolicyAsCode module
-RUN pwsh -Command 'Set-PSResourceRepository -Name "PSGallery" -Trusted'
+RUN Set-PSResourceRepository -Name "PSGallery" -Trusted
 
 ARG AZ_ACCOUNTS_VERSION=*
-RUN pwsh -Command 'Install-PSResource -Name "Az.Accounts" -Version $env:AZ_ACCOUNTS_VERSION -Scope AllUsers -TrustRepository'
+RUN Install-PSResource -Name "Az.Accounts" -Version $env:AZ_ACCOUNTS_VERSION -Scope AllUsers -TrustRepository
 
 ARG AZ_POLICYINSIGHTS_VERSION=*
-RUN pwsh -Command 'Install-PSResource -Name "Az.PolicyInsights" -Version $env:AZ_POLICYINSIGHTS_VERSION -Scope AllUsers -TrustRepository'
+RUN Install-PSResource -Name "Az.PolicyInsights" -Version $env:AZ_POLICYINSIGHTS_VERSION -Scope AllUsers -TrustRepository
 
 ARG EPAC_VERSION=*
-RUN pwsh -Command 'Install-PSResource -Name "EnterprisePolicyAsCode" -Version $env:EPAC_VERSION -Scope AllUsers -TrustRepository'
+RUN Install-PSResource -Name "EnterprisePolicyAsCode" -Version $env:EPAC_VERSION -Scope AllUsers -TrustRepository
+
+RUN Import-Module Az.Accounts, Az.PolicyInsights, EnterprisePolicyAsCode
 
 WORKDIR /github/workspace
