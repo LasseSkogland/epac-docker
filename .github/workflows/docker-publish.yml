@@ -27,7 +27,7 @@ jobs:
               id: get_version
               shell: pwsh
               run: |
-                  $module = Find-Module -Name EnterprisePolicyAsCode -Repository PSGallery
+                  $module = Find-PSResource -Name EnterprisePolicyAsCode -Repository PSGallery
                   echo "full=$($module.Version.ToString())" >> $GITHUB_OUTPUT
                   echo "major_minor=$($module.Version.Major).$($module.Version.Minor)" >> $GITHUB_OUTPUT
                   echo "major=$($module.Version.Major)" >> $GITHUB_OUTPUT
