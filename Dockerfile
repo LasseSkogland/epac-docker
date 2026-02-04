@@ -1,5 +1,4 @@
 FROM debian:bookworm-slim
-ARG EPAC_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
@@ -21,9 +20,15 @@ RUN source /etc/os-release \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Azure PowerShell modules and EnterprisePolicyAsCode module
-RUN pwsh -Command "Set-PSRepository -Name 'PSGallery' -InstallationPolicy 'Trusted'; \
-    Install-Module -Name 'Az.Accounts' -Scope AllUsers -Force; \
-    Install-Module -Name 'Az.PolicyInsights' -Scope AllUsers -Force; \
-    Install-Module -Name 'EnterprisePolicyAsCode' -RequiredVersion ($env:EPAC_VERSION) -Scope AllUsers -Force;"
+RUN pwsh -Command 'Set-PSResourceRepository -Name "PSGallery" -Trusted'
+
+ARG AZ_ACCOUNTS_VERSION=*
+RUN pwsh -Command 'Install-PSResource -Name "Az.Accounts" -Version $env:AZ_ACCOUNTS_VERSION -Scope AllUsers -TrustRepository'
+
+ARG AZ_POLICYINSIGHTS_VERSION=*
+RUN pwsh -Command 'Install-PSResource -Name "Az.PolicyInsights" -Version $env:AZ_POLICYINSIGHTS_VERSION -Scope AllUsers -TrustRepository'
+
+ARG EPAC_VERSION=*
+RUN pwsh -Command 'Install-PSResource -Name "EnterprisePolicyAsCode" -Version $env:EPAC_VERSION -Scope AllUsers -TrustRepository'
 
 WORKDIR /github/workspace
